@@ -1,0 +1,21 @@
+{
+    "name": "deckbuilder",
+    "version": "1.0.0",
+    "description": "MTG Deckbuilder that features user generated tags as filters",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "tsc && open index.html"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/roman9891/deckbuilder.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/roman9891/deckbuilder/issues"
+    },
+    "homepage": "https://github.com/roman9891/deckbuilder#readme"
+}
