@@ -1,0 +1,28 @@
+body {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+}
+
+div {
+    border: 1px solid black;
+}
+
+#left-panel {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+#right-panel {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+#search-box {
+    height: 45vh;
+    overflow: scroll;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}

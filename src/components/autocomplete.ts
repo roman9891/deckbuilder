@@ -69,15 +69,15 @@ const debounce = (func, delay = 1000) => {
 export const createDeckbuilderAutocomplete = (deck: Deck) => {
     const searchBar = document.querySelector('#search-box')
 
-    const renderOption = (cardname) => {
-        console.log(cardname)
+    const renderOption = (card) => {
+        console.log(card)
         return `
-                <p>${cardname}</p>
+                <div>${card.name}</div>
             `
     }
-    const onOptionSelect = (cardname) => {
-        deck.addCard(cardname)
-        console.log(deck.list)
+    const onOptionSelect = (card) => {
+        deck.addCard(card)
+        console.log(deck)
     }
     const inputValue = () => {}
 
@@ -88,7 +88,7 @@ export const createDeckbuilderAutocomplete = (deck: Deck) => {
     const fetchData = async (q) => {
         console.log('fetching')
         const response = await fetch(
-            `https://api.scryfall.com/cards/autocomplete?q=${q}`
+            `https://api.scryfall.com/cards/search?q=${encodeURI(q)}`
         )
 
         if (!response.ok) {
