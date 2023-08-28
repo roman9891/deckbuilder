@@ -1,6 +1,7 @@
 import { createCardPreview } from '../components/card-preview.js'
 import { TagEditor } from '../components/tag-editor.js'
 import { Card } from './Card.js'
+import { Tag, TagType } from './Tag.js'
 
 export class Deck {
     public list: Card[]
@@ -48,14 +49,26 @@ export class Deck {
         const tagFilterContainer = document.querySelector('#tag-filter')
         tagFilterContainer.innerHTML = ''
 
-        const tags: Set<string> = new Set()
+        const tags: { [key in TagType]?: Set<Tag> } = {}
 
-        this.list.forEach((card) => card.tags.forEach((tag) => tags.add(tag)))
-        console.log(tags)
-        tags.forEach((tag) => {
-            const tagButton = document.createElement('button')
-            tagButton.innerText = tag
-            tagFilterContainer.append(tagButton)
+        this.list.forEach((card) =>
+            card.tags.forEach((tag) => {
+                console.log(tag)
+                if (!tags[tag.type]) tags[tag.type] = new Set()
+                tags[tag.type].add(tag)
+            })
+        )
+        console.log({ tags })
+
+        Object.keys(tags).forEach((key) => {
+            const div = document.createElement('div')
+            div.innerText = key
+            tags[key].forEach((tag) => {
+                const tagButton = document.createElement('button')
+                tagButton.innerText = tag.name
+                div.append(tagButton)
+            })
+            tagFilterContainer.append(div)
         })
     }
 }

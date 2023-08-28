@@ -1,4 +1,4 @@
-import { Card } from '../classes/Card'
+import { Card } from '../classes/Card.js'
 
 export const createCardPreview = (card: Card) => {
     const cardPreviewDiv = document.querySelector('#card-preview')

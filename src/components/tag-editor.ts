@@ -1,4 +1,5 @@
 import { Card } from '../classes/Card'
+import { Tag } from '../classes/Tag'
 
 export class TagEditor {
     constructor(public card: Card, public container: HTMLElement) {}
@@ -25,20 +26,21 @@ export class TagEditor {
         const submitTagEvent = (e) => {
             e.preventDefault()
             const name = input.value
-            if (!this.card.addTag(name)) return
-            this.createTagButton(name)
+            const tag = this.card.addTag(name)
+            if (!tag) return
+            this.createTagButton(tag)
         }
 
         form.addEventListener('submit', submitTagEvent)
         this.container.append(form)
     }
 
-    createTagButton(name: string) {
+    createTagButton(tag: Tag) {
         const tagButton = document.createElement('button')
-        tagButton.innerText = name
+        tagButton.innerText = tag.name
 
         const removeTagEvent = (e) => {
-            this.card.removeTag(name)
+            this.card.removeTag(tag.name)
             this.container.removeChild(tagButton)
         }
 
