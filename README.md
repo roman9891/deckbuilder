@@ -4,11 +4,9 @@ MTG Deckbuilder that features user generated tags as filters
 
 # TODO
 
-tag update - type
-tag types - mv, type line, user tags
+filter
 set commander
 remove card
-filter
 import - input file
 export - input file | RDS | mongo DB
 export tag file - csv - name, tags (tag1|tag2|tag3...)

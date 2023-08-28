@@ -49,23 +49,32 @@ export class Deck {
         const tagFilterContainer = document.querySelector('#tag-filter')
         tagFilterContainer.innerHTML = ''
 
-        const tags: { [key in TagType]?: Set<Tag> } = {}
+        const tags: { [key in TagType]?: Set<string> } = {}
 
         this.list.forEach((card) =>
             card.tags.forEach((tag) => {
-                console.log(tag)
                 if (!tags[tag.type]) tags[tag.type] = new Set()
-                tags[tag.type].add(tag)
+                tags[tag.type].add(tag.name)
             })
         )
-        console.log({ tags })
 
-        Object.keys(tags).forEach((key) => {
+        const categoryOrder: TagType[] = [
+            TagType.manaValue,
+            TagType.color,
+            TagType.superType,
+            TagType.subType,
+            TagType.keywords,
+            TagType.user,
+        ]
+
+        categoryOrder.forEach((key) => {
             const div = document.createElement('div')
             div.innerText = key
-            tags[key].forEach((tag) => {
+            const sortedTags = Array.from(tags[key]).sort()
+            console.log({ sortedTags })
+            sortedTags.forEach((name: string) => {
                 const tagButton = document.createElement('button')
-                tagButton.innerText = tag.name
+                tagButton.innerText = name
                 div.append(tagButton)
             })
             tagFilterContainer.append(div)

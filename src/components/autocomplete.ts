@@ -70,14 +70,12 @@ export const createDeckbuilderAutocomplete = (deck: Deck) => {
     const searchBar = document.querySelector('#search-box')
 
     const renderOption = (card) => {
-        console.log(card)
         return `
                 <div>${card.name}</div>
             `
     }
     const onOptionSelect = (card) => {
         deck.addCard(card)
-        console.log(deck)
     }
     const inputValue = () => {}
 
@@ -97,7 +95,6 @@ export const createDeckbuilderAutocomplete = (deck: Deck) => {
         }
 
         const data = (await response.json()) as FetchedData
-        console.log(data)
 
         return data.data
     }
