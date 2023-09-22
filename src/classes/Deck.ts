@@ -9,6 +9,7 @@ export class Deck {
     constructor() {
         this.list = []
     }
+
     addCard(cardData) {
         if (this.list.find((card) => card.name === cardData.name)) return
         const card = new Card(cardData, this)
@@ -23,8 +24,25 @@ export class Deck {
     renderList() {
         const decklistContainer = document.querySelector('#decklist-container')
         decklistContainer.innerHTML = ''
+        const filters = []
+        document.querySelectorAll('.is-active').forEach((node) => {
+            filters.push(node.innerHTML)
+        })
 
-        this.list.forEach((card) => {
+        decklistContainer.textContent = `Filters: ${filters.join(' ')}`
+
+        let listToRender = this.list
+
+        if (filters.length) {
+            listToRender = this.list.filter((card) => {
+                for (let filter of filters) {
+                    if (card.tags.find((tag) => tag.name === filter))
+                        return true
+                }
+            })
+        }
+
+        listToRender.forEach((card) => {
             const item = document.createElement('div')
             item.innerText = card.name
             item.addEventListener('click', (e) => {
@@ -36,10 +54,31 @@ export class Deck {
                 )
                 tagEditor.createTagEditor()
             })
-            const removeButton = document.createElement('button')
-            removeButton.innerText = 'x'
 
-            item.append(removeButton)
+            const increaseQuantity = document.createElement('button')
+            increaseQuantity.innerText = '+'
+
+            const decreaseQuantity = document.createElement('button')
+            decreaseQuantity.innerText = '-'
+
+            const setCommanderButton = document.createElement('button')
+            setCommanderButton.innerText = '♔'
+
+            item.addEventListener('mouseover', (e) => {
+                item.append(increaseQuantity, decreaseQuantity)
+                if (
+                    card.tags.find((tag) => tag.name === 'Creature') &&
+                    card.tags.find((tag) => tag.name === 'Legendary')
+                ) {
+                    item.append(setCommanderButton)
+                }
+            })
+
+            item.addEventListener('mouseleave', (e) => {
+                item.querySelectorAll('button').forEach((node) =>
+                    item.removeChild(node)
+                )
+            })
 
             decklistContainer.append(item)
         })
@@ -73,11 +112,19 @@ export class Deck {
             const sortedTags = Array.from(tags[key]).sort()
             console.log({ sortedTags })
             sortedTags.forEach((name: string) => {
-                const tagButton = document.createElement('button')
-                tagButton.innerText = name
-                div.append(tagButton)
+                this.createTagButton(name, div)
             })
             tagFilterContainer.append(div)
         })
+    }
+
+    createTagButton(name: string, root: HTMLElement) {
+        const tagButton = document.createElement('button')
+        tagButton.addEventListener('click', (e) => {
+            tagButton.classList.toggle('is-active')
+            this.renderList()
+        })
+        tagButton.innerText = name
+        root.append(tagButton)
     }
 }

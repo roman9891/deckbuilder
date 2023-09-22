@@ -25,11 +25,11 @@ const createAutoComplete = (
         const items = await fetchData(e.target.value)
 
         if (!items.length) {
-            dropdown.classList.remove('is-active')
+            // dropdown.classList.remove('is-active')
             return
         }
 
-        dropdown.classList.add('is-active')
+        // dropdown.classList.add('is-active')
 
         for (let item of items) {
             const option = document.createElement('a')
@@ -37,7 +37,7 @@ const createAutoComplete = (
             option.classList.add('dropdown-item')
             option.innerHTML = renderOption(item)
             option.addEventListener('click', () => {
-                dropdown.classList.remove('is-active')
+                // dropdown.classList.remove('is-active')
                 input.value = inputValue(item)
                 onOptionSelect(item)
             })
@@ -48,10 +48,10 @@ const createAutoComplete = (
 
     input.addEventListener('input', debounce(onInput, 500))
 
-    document.addEventListener('click', (e) => {
-        const target = e.target as Node
-        if (!root.contains(target)) dropdown.classList.remove('is-active')
-    })
+    // document.addEventListener('click', (e) => {
+    //     const target = e.target as Node
+    //     if (!root.contains(target)) dropdown.classList.remove('is-active')
+    // })
 }
 
 const debounce = (func, delay = 1000) => {
@@ -75,6 +75,7 @@ export const createDeckbuilderAutocomplete = (deck: Deck) => {
             `
     }
     const onOptionSelect = (card) => {
+        console.log('onOptionsSelect: ', card)
         deck.addCard(card)
     }
     const inputValue = () => {}

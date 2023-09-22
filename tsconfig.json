@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outDir": "dist",
         "module": "es6",
-        "lib": ["ES6", "DOM"]
+        "lib": ["ES2016", "DOM"]
     },
     "include": ["src/**/*"],
     "compileOnSave": true

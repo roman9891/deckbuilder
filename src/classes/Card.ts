@@ -10,6 +10,7 @@ interface CardData {
     image_uris: {
         normal: string
     }
+    card_faces: { image_uris: { normal: string } }[]
 }
 
 export class Card {
@@ -19,8 +20,14 @@ export class Card {
 
     constructor(cardData: CardData, public deck: Deck) {
         this.name = cardData.name
-        this.imageLink = cardData.image_uris.normal
-        this.tags = [...this.parseNativeTags(cardData)]
+        // TODO
+        if (cardData.card_faces) {
+            this.tags = []
+            this.imageLink = ''
+        } else {
+            this.tags = [...this.parseNativeTags(cardData)]
+            this.imageLink = cardData.image_uris.normal
+        }
     }
 
     addTag(name: string) {
