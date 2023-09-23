@@ -17,6 +17,7 @@ export class Card {
     public name: string
     public tags: Tag[]
     public imageLink: string
+    public quantity: number
 
     constructor(cardData: CardData, public deck: Deck) {
         this.name = cardData.name
@@ -28,6 +29,21 @@ export class Card {
             this.tags = [...this.parseNativeTags(cardData)]
             this.imageLink = cardData.image_uris.normal
         }
+        this.quantity = 1
+    }
+
+    increaseQuantity = () => {
+        this.quantity++
+        this.deck.renderList()
+    }
+
+    decreaseQuantity = () => {
+        if (this.quantity === 1) {
+            this.deck.removeCard(this.name)
+        } else {
+            this.quantity--
+        }
+        this.deck.renderList()
     }
 
     addTag(name: string) {

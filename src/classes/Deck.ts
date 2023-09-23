@@ -60,7 +60,7 @@ export class Deck {
 
         listToRender.forEach((card) => {
             const item = document.createElement('div')
-            item.innerText = card.name
+            item.innerText = `${card.name} x ${card.quantity}`
             item.addEventListener('click', (e) => {
                 createCardPreview(card)
 
@@ -73,9 +73,11 @@ export class Deck {
 
             const increaseQuantity = document.createElement('button')
             increaseQuantity.innerText = '+'
+            increaseQuantity.addEventListener('click', card.increaseQuantity)
 
             const decreaseQuantity = document.createElement('button')
             decreaseQuantity.innerText = '-'
+            decreaseQuantity.addEventListener('click', card.decreaseQuantity)
 
             const setCommanderButton = document.createElement('button')
             setCommanderButton.innerText = '♔'

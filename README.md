@@ -4,8 +4,6 @@ MTG Deckbuilder that features user generated tags as filters
 
 # TODO - unimplemeted
 
-filters
-set commander - add commander function - if already commander remove - add to decklist - remove from deck list - add to commander - remove commander
 quantity update - card quantity attr and + - buttons
 import - input file
 export - input file | RDS | mongo DB
