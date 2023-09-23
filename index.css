@@ -30,3 +30,7 @@ img {
 .is-active {
     background-color: orange;
 }
+
+.is-commander {
+    border: 1px solid burlywood;
+}

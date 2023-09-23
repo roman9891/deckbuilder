@@ -5,6 +5,7 @@ import { Tag, TagType } from './Tag.js'
 
 export class Deck {
     public list: Card[]
+    private commander: string
 
     constructor() {
         this.list = []
@@ -17,13 +18,28 @@ export class Deck {
         this.renderList()
         this.renderTagFilter()
     }
-    setCommander = () => {}
-    removeCard = () => {}
+
+    setCommander = (cardName: string) => {
+        this.commander = cardName
+        this.renderList()
+    }
+
+    removeCard = (cardName: string) => {
+        const index = this.list.findIndex((card) => card.name === cardName)
+        this.list.splice(index, 1)
+    }
+
     import = () => {}
     export = () => {}
     renderList() {
         const decklistContainer = document.querySelector('#decklist-container')
         decklistContainer.innerHTML = ''
+
+        const commanderContainer = document.querySelector(
+            '#commander-container'
+        )
+        commanderContainer.innerHTML = ''
+
         const filters = []
         document.querySelectorAll('.is-active').forEach((node) => {
             filters.push(node.innerHTML)
@@ -63,6 +79,9 @@ export class Deck {
 
             const setCommanderButton = document.createElement('button')
             setCommanderButton.innerText = '♔'
+            setCommanderButton.addEventListener('click', () => {
+                this.setCommander(card.name)
+            })
 
             item.addEventListener('mouseover', (e) => {
                 item.append(increaseQuantity, decreaseQuantity)
@@ -80,7 +99,12 @@ export class Deck {
                 )
             })
 
-            decklistContainer.append(item)
+            if (this.commander && card.name === this.commander) {
+                item.classList.toggle('is-commander')
+                commanderContainer.append(item)
+            } else {
+                decklistContainer.append(item)
+            }
         })
     }
 
