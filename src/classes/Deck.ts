@@ -1,7 +1,17 @@
+import { createDeckbuilderAutocomplete } from '../components/autocomplete.js'
 import { createCardPreview } from '../components/card-preview.js'
 import { TagEditor } from '../components/tag-editor.js'
 import { Card } from './Card.js'
-import { Tag, TagType } from './Tag.js'
+import { TagType } from './Tag.js'
+
+interface FileInputEventTarget extends EventTarget {
+    files: Blob[]
+}
+
+interface ParsedCardData {
+    quantity: number
+    name: string
+}
 
 export class Deck {
     public list: Card[]
@@ -9,6 +19,8 @@ export class Deck {
 
     constructor() {
         this.list = []
+        createDeckbuilderAutocomplete(this)
+        this.renderList()
     }
 
     addCard(cardData) {
@@ -39,6 +51,11 @@ export class Deck {
             '#commander-container'
         )
         commanderContainer.innerHTML = ''
+
+        const importButton = document.querySelector('#import-button')
+        console.log(importButton)
+
+        importButton.addEventListener('change', this.loadDeck)
 
         const filters = []
         document.querySelectorAll('.is-active').forEach((node) => {
@@ -110,7 +127,7 @@ export class Deck {
         })
     }
 
-    renderTagFilter() {
+    renderTagFilter = () => {
         const tagFilterContainer = document.querySelector('#tag-filter')
         tagFilterContainer.innerHTML = ''
 
@@ -135,11 +152,14 @@ export class Deck {
         categoryOrder.forEach((key) => {
             const div = document.createElement('div')
             div.innerText = key
+
+            if (!tags[key]) return
+
             const sortedTags = Array.from(tags[key]).sort()
-            console.log({ sortedTags })
             sortedTags.forEach((name: string) => {
                 this.createTagButton(name, div)
             })
+
             tagFilterContainer.append(div)
         })
     }
@@ -152,5 +172,65 @@ export class Deck {
         })
         tagButton.innerText = name
         root.append(tagButton)
+    }
+
+    loadDeck = (e: Event) => {
+        const reader = new FileReader()
+        const deck = new Deck()
+        const fileInputEventTarget = e.target as FileInputEventTarget
+        const file = fileInputEventTarget.files[0]
+
+        reader.readAsText(file)
+        reader.addEventListener('load', async (e) => {
+            const inputString = reader.result
+
+            if (typeof inputString === 'string') {
+                console.log(this)
+                const parsedData = this.parseTxtFile(inputString)
+
+                const promises = []
+
+                parsedData.forEach((parsedCardData) => {
+                    const param = encodeURIComponent(parsedCardData.name)
+                    const promise = fetch(
+                        `https://api.scryfall.com/cards/named?exact=${param}`
+                    )
+                    promises.push(promise)
+                })
+
+                const responses: Response[] = await Promise.all(promises)
+                const data = await Promise.all(
+                    responses.map((res) => res.json())
+                )
+
+                console.log(data)
+
+                for (let cardData of data) {
+                    deck.addCard(cardData)
+                }
+            }
+        })
+    }
+
+    parseTxtFile(txtFileString: string) {
+        const lines = txtFileString.trim().split('\n')
+        const parsedData: ParsedCardData[] = []
+
+        console.log({ lines, parsedData })
+
+        lines.forEach((line) => {
+            const match = line.match(/(\d+)\s+(.+)/)
+            if (match) {
+                const quantity = parseInt(match[1], 10)
+                const name = match[2].trim()
+                parsedData.push({ quantity, name })
+            }
+        })
+
+        return parsedData
+    }
+
+    fetchCardName(parsedCardData: ParsedCardData) {
+        // fetch card data based on name
     }
 }
