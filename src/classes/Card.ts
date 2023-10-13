@@ -10,7 +10,11 @@ interface CardData {
     image_uris: {
         normal: string
     }
-    card_faces: { image_uris: { normal: string } }[]
+    card_faces: {
+        image_uris: { normal: string }
+        type_line: string
+    }[]
+    color_identity: string[]
 }
 
 export class Card {
@@ -23,8 +27,34 @@ export class Card {
         this.name = cardData.name
         // TODO
         if (cardData.card_faces) {
-            this.tags = []
-            this.imageLink = ''
+            const manaValue = new Tag(
+                cardData.cmc.toString(),
+                TagType.manaValue
+            )
+            const colors = cardData.color_identity.map(
+                (color) => new Tag(color, TagType.color)
+            )
+            const frontTypes = this.parseTypeLine(
+                cardData.card_faces[0].type_line
+            )
+            const backTypes = this.parseTypeLine(
+                cardData.card_faces[1].type_line
+            )
+            const keywords = cardData.keywords.map(
+                (keyword) => new Tag(keyword, TagType.keywords)
+            )
+
+            this.tags = [
+                manaValue,
+                ...colors,
+                ...keywords,
+                ...frontTypes.superTypes,
+                ...frontTypes.subTypes,
+                ...backTypes.superTypes,
+                ...backTypes.subTypes,
+            ]
+
+            this.imageLink = cardData.card_faces[0].image_uris.normal
         } else {
             this.tags = [...this.parseNativeTags(cardData)]
             this.imageLink = cardData.image_uris.normal
@@ -65,11 +95,30 @@ export class Card {
         const colors = cardData.colors.map(
             (color) => new Tag(color, TagType.color)
         )
+
+        const types = this.parseTypeLine(cardData.type_line)
+
+        const keywords = cardData.keywords.map(
+            (keyword) => new Tag(keyword, TagType.keywords)
+        )
+
+        const tags: Tag[] = [
+            manaValue,
+            ...colors,
+            ...types.superTypes,
+            ...types.subTypes,
+            ...keywords,
+        ]
+
+        return tags
+    }
+
+    parseTypeLine(typeLine: string): { superTypes: Tag[]; subTypes: Tag[] } {
         let superTypes: Tag[]
         let subTypes: Tag[]
-        if (cardData.type_line.includes('—')) {
-            let [superTypesJoined, subTypesJoined] =
-                cardData.type_line.split('—')
+
+        if (typeLine.includes('—')) {
+            let [superTypesJoined, subTypesJoined] = typeLine.split('—')
             superTypes = superTypesJoined
                 .split(' ')
                 .filter((term) => term)
@@ -79,18 +128,14 @@ export class Card {
                 .filter((term) => term)
                 .map((type) => new Tag(type, TagType.subType))
         } else {
-            superTypes = cardData.type_line
+            superTypes = typeLine
                 .split(' ')
                 .map((type) => new Tag(type, TagType.superType))
         }
-        const keywords = cardData.keywords.map(
-            (keyword) => new Tag(keyword, TagType.keywords)
-        )
 
-        const tags = [manaValue, ...colors, ...superTypes, ...keywords]
-
-        if (!subTypes) return tags
-
-        return tags.concat(subTypes)
+        return {
+            superTypes,
+            subTypes,
+        }
     }
 }
