@@ -6,10 +6,9 @@ MTG Deckbuilder that features user generated tags as filters
 
 export - input file | RDS | mongo DB
 export tag file - csv - name, tags (tag1|tag2|tag3...)
-import tag file
 prepopulate tag editor with user tags
-alternate frame for non traditional cards or flip button
 show backface of DFC's
+refactor
 styling
 
 # Bugs - issues from implementation

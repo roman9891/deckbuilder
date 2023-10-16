@@ -106,9 +106,10 @@ export class Card {
             manaValue,
             ...colors,
             ...types.superTypes,
-            ...types.subTypes,
             ...keywords,
         ]
+
+        if (types.subTypes) return tags.concat(...types.subTypes)
 
         return tags
     }

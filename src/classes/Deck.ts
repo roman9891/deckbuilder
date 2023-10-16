@@ -53,9 +53,10 @@ export class Deck {
         commanderContainer.innerHTML = ''
 
         const importButton = document.querySelector('#import-button')
-        console.log(importButton)
-
         importButton.addEventListener('change', this.loadDeck)
+
+        const exportButton = document.querySelector('#export-button')
+        exportButton.addEventListener('click', this.saveDeck)
 
         const filters = []
         document.querySelectorAll('.is-active').forEach((node) => {
@@ -232,5 +233,37 @@ export class Deck {
 
     fetchCardName(parsedCardData: ParsedCardData) {
         // fetch card data based on name
+    }
+
+    saveDeck = () => {
+        console.log('saving')
+
+        const data = this.processDeckList()
+        const blob = new Blob([data], { type: 'text/plain' })
+
+        // Create a temporary URL for the blob
+        const url = URL.createObjectURL(blob)
+
+        // Create an anchor element to trigger the download
+        const a = document.createElement('a')
+        a.href = url
+        a.download = 'myData.txt' // Specify the file name with the desired extension
+        document.body.appendChild(a)
+
+        // Trigger the click event to start the download
+        a.click()
+
+        // Clean up by revoking the object URL
+        URL.revokeObjectURL(url)
+    }
+
+    processDeckList(): string {
+        let textData = ''
+
+        this.list.forEach((card) => {
+            textData += `${card.quantity} ${card.name} \n`
+        })
+
+        return textData
     }
 }
