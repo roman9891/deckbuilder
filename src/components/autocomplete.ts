@@ -8,17 +8,23 @@ const createAutoComplete = (
     fetchData: Function
 ) => {
     root.innerHTML = `
-        <label><b>Search</b></label>
-        <input class="input">
-        <div class="dropdown">
-            <div class="dropdown-menu">
-                <div class="dropdown-content results"></div>
-            </div>
-        </div>
+        <div class="col">
+            <div class="row h-10">
+                <label class="col"><b>Search</b></label>
+                <input id="input" class="col">
+            <div>
+            <div class="row h-90">
+                <div id="dropdown" class="col">
+                    <div id="dropdown-menu" class="row">
+                        <div id="dropdown-content-results" class="col"></div>
+                    </div>
+                </div>
+            <div>  
+        <div>
     `
     const input = root.querySelector('input')
-    const dropdown = root.querySelector('.dropdown')
-    const resultsWrapper = root.querySelector('.results')
+    const dropdown = root.querySelector('#dropdown')
+    const resultsWrapper = root.querySelector('#dropdown-content-results')
 
     const onInput = async (e) => {
         resultsWrapper.innerHTML = ''
