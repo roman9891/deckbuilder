@@ -8,15 +8,20 @@
     </head>
     <body>
         <div id="left-panel">
-            <div id="search-box"></div>
+            <div id="search-box">SEARCH</div>
             <div id="tag-filter">TAG FILTER</div>
         </div>
         <div id="main-panel">
-            <form action="">
-                <label for="import-button">IMPORT</label>
-                <input type="file" id="import-button" accept=".txt" />
-            </form>
-            <button id="export-button">EXPORT</button>
+            <div id="import-export-container">
+                <form action="">
+                    <label for="import-button">IMPORT</label>
+                    <input type="file" id="import-button" accept=".txt" />
+                </form>
+                <div id="export-container">
+                    <label for="export-button">EXPORT</label>
+                    <button id="export-button">EXPORT TXT</button>
+                </div>
+            </div>
             DECKLIST
             <div id="commander-container">COMMANDER</div>
             <div id="decklist-container"></div>

@@ -38,7 +38,7 @@ const createAutoComplete = (
             option.innerHTML = renderOption(item)
             option.addEventListener('click', () => {
                 // dropdown.classList.remove('is-active')
-                input.value = inputValue(item)
+                // input.value = inputValue(item)
                 onOptionSelect(item)
             })
 
@@ -78,7 +78,9 @@ export const createDeckbuilderAutocomplete = (deck: Deck) => {
         console.log('onOptionsSelect: ', card)
         deck.addCard(card)
     }
-    const inputValue = () => {}
+    const inputValue = (item) => {
+        return item.name
+    }
 
     interface FetchedData {
         data: []
